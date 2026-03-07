@@ -128,6 +128,7 @@ function App() {
                 element={
                   <ThemedLayout
                     Title={() => <div style={{ padding: "16px", fontSize: "20px", fontWeight: "bold" }}>🏠 Vigliano Hub</div>}
+                    siderCollapsible={false}
                   >
                     <Outlet />
                   </ThemedLayout>
