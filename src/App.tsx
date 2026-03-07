@@ -48,88 +48,77 @@ function App() {
                 name: "longevity",
                 list: "/longevity",
                 meta: {
-                  label: "Longevity",
-                  icon: "🧬",
+                  label: "🧬 Longevity",
                 },
               },
               {
                 name: "finance",
                 list: "/finance",
                 meta: {
-                  label: "Finance",
-                  icon: "💰",
+                  label: "💰 Finance",
                 },
               },
               {
                 name: "personal",
                 list: "/personal",
                 meta: {
-                  label: "Personal Life",
-                  icon: "🏠",
+                  label: "🏠 Personal Life",
                 },
               },
               {
                 name: "nuvitru",
                 list: "/nuvitru",
                 meta: {
-                  label: "Nuvitru",
-                  icon: "🌱",
+                  label: "🌱 Nuvitru",
                 },
               },
               {
                 name: "fractional",
                 list: "/fractional",
                 meta: {
-                  label: "FraXtional CMO",
-                  icon: "💼",
+                  label: "💼 FraXtional CMO",
                 },
               },
               {
                 name: "vibrant",
                 list: "/vibrant",
                 meta: {
-                  label: "Vibrant",
-                  icon: "🔬",
+                  label: "🔬 Vibrant",
                 },
               },
               {
                 name: "agentic-ai",
                 list: "/agentic-ai",
                 meta: {
-                  label: "Agentic AI",
-                  icon: "🦾",
+                  label: "🦾 Agentic AI",
                 },
               },
               {
                 name: "cron-jobs",
                 list: "/cron-jobs",
                 meta: {
-                  label: "Cron Jobs",
-                  icon: "🔧",
+                  label: "🔧 Cron Jobs",
                 },
               },
               {
                 name: "openclaw",
                 list: "/openclaw",
                 meta: {
-                  label: "OpenClaw",
-                  icon: "🦞",
+                  label: "🦞 OpenClaw",
                 },
               },
               {
                 name: "system-health",
                 list: "/system-health",
                 meta: {
-                  label: "System Health",
-                  icon: "🔍",
+                  label: "🔍 System Health",
                 },
               },
               {
                 name: "workspace",
                 list: "/workspace",
                 meta: {
-                  label: "Workspace",
-                  icon: "📂",
+                  label: "📂 Workspace",
                 },
               },
             ]}
@@ -137,7 +126,9 @@ function App() {
             <Routes>
               <Route
                 element={
-                  <ThemedLayout>
+                  <ThemedLayout
+                    Title={() => <div style={{ padding: "16px", fontSize: "20px", fontWeight: "bold" }}>🏠 Vigliano Hub</div>}
+                  >
                     <Outlet />
                   </ThemedLayout>
                 }
