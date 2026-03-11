@@ -8,6 +8,7 @@ export default defineConfig({
     host: true,
     allowedHosts: [
       'vigliano-io.ngrok.app',
+      'doug-vigliano.ngrok.app',
       'hub.vigliano.io',
       'localhost'
     ]
