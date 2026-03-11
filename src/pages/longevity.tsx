@@ -146,6 +146,13 @@ export const LongevityPage = () => {
     { name: "Ginger Root", amount: "200 mg", benefit: "Anti-inflammatory, digestion" },
   ];
 
+  const additionalSupplements = [
+    { name: "Nordic Naturals Ultimate Omega (Fish Oil)", amount: "2,560 mg Omega-3s (4 soft gels)", benefit: "Heart, brain, immune health" },
+    { name: "BodyBio Sodium Butyrate (Postbiotic)", amount: "2 capsules daily", benefit: "Gut support, digestive wellness, metabolic balance" },
+    { name: "BodyBio TUDCA (Tauroursodeoxycholic Acid)", amount: "2 capsules daily", benefit: "Liver support, fat/oil digestion, mitochondrial function" },
+    { name: "Creatine Monohydrate", amount: "5g daily", benefit: "Muscle recovery, cognitive support, cellular energy" },
+  ];
+
   const labColumns = [
     {
       title: "Biomarker",
@@ -402,7 +409,7 @@ export const LongevityPage = () => {
               ),
               children: (
                 <div>
-                  <Title level={4}>Daily Supplement Stack (9 capsules/day)</Title>
+                  <Title level={4}>Daily Supplement Stack (17 capsules/day)</Title>
                   
                   <Collapse defaultActiveKey={["vitamins"]} style={{ marginTop: "16px" }}>
                     <Panel header={<strong>💊 Vitamins ({vitamins.length})</strong>} key="vitamins">
@@ -426,6 +433,15 @@ export const LongevityPage = () => {
                     <Panel header={<strong>🧠 Nootropics & Herbals ({herbalsNootropics.length})</strong>} key="herbals">
                       <Table 
                         dataSource={herbalsNootropics} 
+                        columns={supplementColumns} 
+                        pagination={false}
+                        size="small"
+                      />
+                    </Panel>
+
+                    <Panel header={<strong>🐟 Additional Supplements ({additionalSupplements.length})</strong>} key="additional">
+                      <Table 
+                        dataSource={additionalSupplements} 
                         columns={supplementColumns} 
                         pagination={false}
                         size="small"
