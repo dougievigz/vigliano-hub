@@ -1,16 +1,8 @@
 /**
- * Vercel Serverless Function: Query HealthKit Data
+ * Vercel Serverless Function: Query HealthKit Data (Cloud-Based)
  * 
- * This queries the SQLite database on the Mac Mini via a bridge endpoint.
- * For Vercel deployment, we'll need to either:
- * 1. Expose a local API on Mac Mini (via ngrok)
- * 2. Upload SQLite to Vercel Postgres
- * 3. Sync data to JSON files served statically
- * 
- * For now, this returns recent data from the local database.
+ * Queries the Mac Mini HealthKit bridge API via ngrok
  */
-
-import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
   // CORS headers
@@ -24,26 +16,11 @@ export default async function handler(req, res) {
 
   const { metric = 'heart_rate', days = 7 } = req.query;
 
-  // Check if we have a bridge endpoint configured
-  const bridgeUrl = process.env.HEALTHKIT_BRIDGE_URL;
-
-  if (!bridgeUrl) {
-    // Return cached/static data if bridge not available
-    return res.status(200).json({
-      success: true,
-      cached: true,
-      message: 'Returning cached data - bridge endpoint not configured',
-      data: getSampleData(metric)
-    });
-  }
+  // Bridge URL (ngrok tunnel to Mac Mini)
+  const bridgeUrl = process.env.HEALTHKIT_BRIDGE_URL || 'https://vibrant-labs.ngrok.app';
 
   try {
-    // Query the Mac Mini bridge endpoint
-    const response = await fetch(`${bridgeUrl}/healthkit?metric=${metric}&days=${days}`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.HEALTHKIT_BRIDGE_TOKEN || ''}`
-      }
-    });
+    const response = await fetch(`${bridgeUrl}/healthkit?metric=${metric}&days=${days}`);
 
     if (!response.ok) {
       throw new Error(`Bridge error: ${response.status}`);
@@ -55,19 +32,21 @@ export default async function handler(req, res) {
       success: true,
       cached: false,
       metric,
+      bridge: 'live',
       data
     });
 
   } catch (error) {
     console.error('HealthKit bridge error:', error);
     
-    // Fallback to cached data
+    // Return error but don't crash
     return res.status(200).json({
-      success: true,
+      success: false,
       cached: true,
-      message: 'Bridge unavailable, returning cached data',
-      data: getSampleData(metric),
-      error: error.message
+      error: error.message,
+      message: 'Bridge unavailable - check if Mac Mini is running',
+      // Fallback sample data
+      data: getSampleData(metric)
     });
   }
 }
@@ -85,24 +64,13 @@ function getSampleData(metric) {
       last_reading: 62,
       last_updated: new Date().toISOString()
     },
-    steps: {
+    step_count: {
       today: 8245,
       average: 8500,
-      last_7_days: [7800, 9200, 8500, 7300, 9800, 8245, 8600],
-      last_updated: new Date().toISOString()
-    },
-    sleep: {
-      last_night_hours: 7.5,
-      average: 7.2,
-      quality: 'good',
-      last_updated: new Date().toISOString()
-    },
-    activity_calories: {
-      today: 420,
-      average: 450,
+      total_steps: 59500,
       last_updated: new Date().toISOString()
     }
   };
 
-  return data[metric] || { message: 'Metric not found', available: Object.keys(data) };
+  return data[metric] || { message: 'Metric not found' };
 }
