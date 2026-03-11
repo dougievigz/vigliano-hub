@@ -1,93 +1,53 @@
-import { useState, useEffect } from "react";
-import { Typography, Card, Row, Col, Statistic, Progress, Table, Tabs, Tag, Collapse, Divider, Spin, Alert } from "antd";
+import { Typography, Card, Row, Col, Statistic, Progress, Table, Tabs, Tag, Collapse, Divider } from "antd";
 import { 
   HeartOutlined, 
   ThunderboltOutlined, 
   FireOutlined, 
   ExperimentOutlined,
   MedicineBoxOutlined,
-  DashboardOutlined,
-  ReloadOutlined
+  DashboardOutlined 
 } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
 export const LongevityPage = () => {
-  const [healthData, setHealthData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-
-  // Fetch health data
-  const fetchHealthData = async () => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const response = await fetch('/api/health-summary');
-      
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      setHealthData(data);
-      setLastUpdated(new Date());
-    } catch (err: any) {
-      setError(err.message);
-      console.error('Failed to fetch health data:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Initial fetch
-  useEffect(() => {
-    fetchHealthData();
-    
-    // Auto-refresh every 5 minutes
-    const interval = setInterval(fetchHealthData, 5 * 60 * 1000);
-    
-    return () => clearInterval(interval);
-  }, []);
-
-  // Lab Results Data (static for now, will come from API)
+  // Lab Results Data
   const labResults = [
     {
       key: "1",
       biomarker: "HbA1c (Blood Sugar)",
-      value: healthData?.labs?.hba1c?.value ? `${healthData.labs.hba1c.value}%` : "4.9%",
+      value: "4.9%",
       optimal: "< 5.7%",
-      status: healthData?.labs?.hba1c?.status || "optimal",
-      date: healthData?.labs?.hba1c?.date || "Feb 6, 2026",
+      status: "optimal",
+      date: "Feb 6, 2026",
       trend: "↓",
     },
     {
       key: "2",
       biomarker: "LDL Cholesterol",
-      value: healthData?.labs?.ldl?.value ? `${healthData.labs.ldl.value} mg/dL` : "90 mg/dL",
+      value: "90 mg/dL",
       optimal: "< 100 mg/dL",
-      status: healthData?.labs?.ldl?.status || "optimal",
-      date: healthData?.labs?.ldl?.date || "Feb 6, 2026",
+      status: "optimal",
+      date: "Feb 6, 2026",
       trend: "↓",
     },
     {
       key: "3",
       biomarker: "eGFR (Kidney Function)",
-      value: healthData?.labs?.egfr?.value ? `${healthData.labs.egfr.value} mL/min` : "104 mL/min",
+      value: "104 mL/min",
       optimal: "> 90 mL/min",
-      status: healthData?.labs?.egfr?.status || "excellent",
-      date: healthData?.labs?.egfr?.date || "Feb 6, 2026",
+      status: "excellent",
+      date: "Feb 6, 2026",
       trend: "↑",
     },
     {
       key: "4",
       biomarker: "hs-CRP (Inflammation)",
-      value: healthData?.labs?.hscrp?.value ? `${healthData.labs.hscrp.value} mg/L` : "15.8 mg/L",
+      value: "15.8 mg/L",
       optimal: "< 3 mg/L",
-      status: healthData?.labs?.hscrp?.status || "high",
-      date: healthData?.labs?.hscrp?.date || "Feb 6, 2026 (sick)",
+      status: "high",
+      date: "Feb 6, 2026 (sick)",
       trend: "⚠️",
     },
     {
@@ -101,7 +61,7 @@ export const LongevityPage = () => {
     },
   ];
 
-  // Daily Supplement Stack (unchanged)
+  // Daily Supplement Stack
   const vitamins = [
     { name: "Vitamin A (palmitate)", amount: "2000 mcg", dv: "222%" },
     { name: "Vitamin C (ascorbic acid)", amount: "500 mg", dv: "556%" },
@@ -203,58 +163,14 @@ export const LongevityPage = () => {
     },
   ];
 
-  if (loading && !healthData) {
-    return (
-      <div style={{ padding: "24px", textAlign: "center" }}>
-        <Spin size="large" />
-        <p style={{ marginTop: "16px" }}>Loading health data...</p>
-      </div>
-    );
-  }
-
   return (
     <div style={{ padding: "24px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div>
-          <Title level={2}>
-            <DashboardOutlined /> Longevity Dashboard
-          </Title>
-          <Text type="secondary">
-            Real-time health tracking: biomarkers, Oura Ring metrics, supplements, and biohacking experiments
-          </Text>
-        </div>
-        <div>
-          <button 
-            onClick={fetchHealthData} 
-            disabled={loading}
-            style={{ 
-              padding: "8px 16px", 
-              cursor: loading ? "not-allowed" : "pointer",
-              border: "1px solid #d9d9d9",
-              borderRadius: "4px",
-              background: "white"
-            }}
-          >
-            <ReloadOutlined spin={loading} /> Refresh
-          </button>
-          {lastUpdated && (
-            <div style={{ fontSize: "12px", color: "#8c8c8c", marginTop: "4px" }}>
-              Updated: {lastUpdated.toLocaleTimeString()}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {error && (
-        <Alert
-          message="Failed to load health data"
-          description={error}
-          type="warning"
-          showIcon
-          closable
-          style={{ marginTop: "16px" }}
-        />
-      )}
+      <Title level={2}>
+        <DashboardOutlined /> Longevity Dashboard
+      </Title>
+      <Text type="secondary">
+        Comprehensive health tracking: biomarkers, Oura Ring metrics, supplements, and biohacking experiments
+      </Text>
 
       {/* Health Score Overview */}
       <Row gutter={[16, 16]} style={{ marginTop: "24px" }}>
@@ -264,7 +180,7 @@ export const LongevityPage = () => {
             <div style={{ textAlign: "center" }}>
               <Progress
                 type="circle"
-                percent={healthData?.health_score || 85}
+                percent={85}
                 size={180}
                 strokeColor={{
                   "0%": "#108ee9",
@@ -278,7 +194,7 @@ export const LongevityPage = () => {
                 )}
               />
               <Typography.Paragraph style={{ marginTop: "16px" }}>
-                <Text type="success">↑ Live from Oura + Labs</Text>
+                <Text type="success">↑ +5 points vs last month</Text>
               </Typography.Paragraph>
             </div>
           </Card>
@@ -291,13 +207,13 @@ export const LongevityPage = () => {
               <Card>
                 <Statistic
                   title="Sleep Score"
-                  value={healthData?.oura?.sleep?.score || 76}
+                  value={76}
                   suffix="/ 100"
                   prefix={<HeartOutlined />}
                   valueStyle={{ color: "#52c41a" }}
                 />
                 <Typography.Text type="secondary" style={{ fontSize: "12px" }}>
-                  {healthData?.oura?.sleep?.duration_hours || 7.5} hours last night
+                  7.5 hours last night
                 </Typography.Text>
               </Card>
             </Col>
@@ -305,13 +221,13 @@ export const LongevityPage = () => {
               <Card>
                 <Statistic
                   title="Readiness"
-                  value={healthData?.oura?.readiness?.score || 66}
+                  value={66}
                   suffix="/ 100"
                   prefix={<ThunderboltOutlined />}
                   valueStyle={{ color: "#fa8c16" }}
                 />
                 <Typography.Text type="secondary" style={{ fontSize: "12px" }}>
-                  {healthData?.oura?.readiness?.score > 70 ? 'Ready to train' : 'Recovery day recommended'}
+                  Recovery day recommended
                 </Typography.Text>
               </Card>
             </Col>
@@ -319,7 +235,7 @@ export const LongevityPage = () => {
               <Card>
                 <Statistic
                   title="Activity"
-                  value={healthData?.oura?.activity?.steps || 8245}
+                  value={8245}
                   prefix={<FireOutlined />}
                   valueStyle={{ color: "#1890ff" }}
                 />
@@ -332,7 +248,7 @@ export const LongevityPage = () => {
               <Card>
                 <Statistic
                   title="HRV (Heart Rate Variability)"
-                  value={healthData?.oura?.hrv?.value || 42}
+                  value={42}
                   suffix="ms"
                   prefix={<HeartOutlined />}
                   valueStyle={{ color: "#52c41a" }}
@@ -346,7 +262,7 @@ export const LongevityPage = () => {
               <Card>
                 <Statistic
                   title="Resting Heart Rate"
-                  value={healthData?.oura?.resting_heart_rate?.value || 58}
+                  value={58}
                   suffix="bpm"
                   prefix={<HeartOutlined />}
                   valueStyle={{ color: "#1890ff" }}
@@ -515,7 +431,7 @@ export const LongevityPage = () => {
                   <ul>
                     <li>hs-CRP elevated (15.8 mg/L) - retest post-illness needed</li>
                     <li>Nickel toxicity (23.69 μg/g, &gt;95th percentile) - chelation needed</li>
-                    <li>Oura readiness score moderate ({healthData?.oura?.readiness?.score || 66}/100) - optimize recovery</li>
+                    <li>Oura readiness score moderate (66/100) - optimize recovery</li>
                     <li>Some vitamins dosed very high (B12 16,667% DV) - confirm with doctor</li>
                   </ul>
                 </Card>
@@ -528,9 +444,8 @@ export const LongevityPage = () => {
       {/* Footer */}
       <Card size="small" style={{ marginTop: "24px" }}>
         <Text type="secondary" style={{ fontSize: "12px" }}>
-          <strong>Last API Update:</strong> {lastUpdated?.toLocaleString() || 'Loading...'} | 
-          <strong> Data Sources:</strong> Oura Ring API (live), LabCorp, Vibrant America, Quest Diagnostics, Manual Supplement Entry |
-          <strong> Auto-refresh:</strong> Every 5 minutes
+          <strong>Last Updated:</strong> March 11, 2026 | 
+          <strong> Data Sources:</strong> Oura Ring API, LabCorp, Vibrant America, Quest Diagnostics, Manual Supplement Entry
         </Text>
       </Card>
     </div>
